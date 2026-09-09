@@ -1,20 +1,26 @@
 package com.lecturenotes.ui;
 
+import com.lecturenotes.model.Folder;
+import com.lecturenotes.services.FolderManager;
 import com.lecturenotes.services.NoteManager;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import com.lecturenotes.services.FolderManager;
+
+import java.util.Optional;
 
 public class MainWindow {
 
     private final Stage stage;
+
     private final NoteManager noteManager;
     private final FolderManager folderManager;
 
     public MainWindow(Stage stage) {
+
         this.stage = stage;
+
         this.noteManager = new NoteManager();
         this.folderManager = new FolderManager();
     }
@@ -26,37 +32,67 @@ public class MainWindow {
         Sidebar sidebar = new Sidebar();
         NoteList noteList = new NoteList();
         NoteEditor noteEditor = new NoteEditor();
-        folderManager.createFolder("Physics", null);
-        folderManager.createFolder("Math", null);
-        folderManager.createFolder("CS", null);
 
-        sidebar.setFolders(folderManager.getFolders());
-
-        // Load existing notes
+        // Load notes
         noteList.setNotes(
             noteManager.getNotes()
         );
 
-        // Open a note when it is selected
+        // Select note
         noteList.setOnNoteSelected(
             noteEditor::showNote
         );
 
-        noteEditor.setOnNoteChanged(note -> noteManager.save());
+        // Autosave
+        noteEditor.setOnNoteChanged(
+            note -> noteManager.save()
+        );
 
-        // Create a new note
-        sidebar.getNewNoteButton().setOnAction(event -> {
+        // Load folders
+        sidebar.setFolders(
+            folderManager.getFolders()
+        );
 
-            var newNote = noteManager.createNote();
+        // Create new note
+        sidebar.getNewNoteButton().setOnAction(
+            event -> {
 
-            noteList.setNotes(
-                noteManager.getNotes()
-            );
+                var newNote =
+                    noteManager.createNote();
 
-            noteEditor.showNote(newNote);
-        });
+                noteList.setNotes(
+                    noteManager.getNotes()
+                );
 
-        // Main content area
+                noteEditor.showNote(newNote);
+            }
+        );
+
+        // Create new folder
+        sidebar.getNewFolderButton().setOnAction(
+            event -> {
+
+                Optional<String> result =
+                    sidebar.requestFolderName();
+
+                result.ifPresent(name -> {
+
+                    if (name.isBlank()) {
+                        return;
+                    }
+
+                    Folder parent = sidebar.getSelectedFolder();
+                    String parentId = parent == null ? null : parent.getId();
+
+                    folderManager.createFolder(name, parentId);
+
+                    sidebar.setFolders(
+                        folderManager.getFolders()
+                    );
+                });
+            }
+        );
+
         HBox content = new HBox(
             noteList,
             noteEditor
@@ -65,14 +101,12 @@ public class MainWindow {
         root.setLeft(sidebar);
         root.setCenter(content);
 
-        // Scene
         Scene scene = new Scene(
             root,
             1400,
             850
         );
 
-        // Load CSS
         scene.getStylesheets().add(
             getClass()
                 .getResource(
@@ -86,5 +120,3 @@ public class MainWindow {
         stage.show();
     }
 }
-
-

@@ -141,3 +141,36 @@
 .new-note-button:pressed {
     -fx-background-color: #44444a;
 }
+
+/* ============================================================
+   Folder Controls
+   ============================================================ */
+
+.new-folder-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6b6b73;
+    -fx-font-size: 13px;
+    -fx-padding: 8px 10px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.new-folder-button:hover {
+    -fx-background-color: #f0f0f2;
+    -fx-text-fill: #17171a;
+}
+
+.folder-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #55555d;
+    -fx-font-size: 14px;
+    -fx-background-radius: 7px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+
+.folder-item:hover {
+    -fx-background-color: #f0f0f2;
+    -fx-text-fill: #17171a;
+}
