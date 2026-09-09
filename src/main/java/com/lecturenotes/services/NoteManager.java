@@ -59,6 +59,14 @@ public class NoteManager {
         return notes;
     }
 
+    public Note createNote() {
+      Note note = new Note("Untitled Note", "");
+
+      notes.add(0, note);
+
+      return note;
+    }
+
     public void addNote(Note note) {
         notes.add(note);
     }
@@ -67,3 +75,5 @@ public class NoteManager {
         notes.remove(note);
     }
 }
+
+

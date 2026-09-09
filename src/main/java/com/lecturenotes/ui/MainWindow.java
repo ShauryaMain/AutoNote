@@ -9,11 +9,9 @@ import javafx.stage.Stage;
 public class MainWindow {
 
     private final Stage stage;
-
     private final NoteManager noteManager;
 
     public MainWindow(Stage stage) {
-
         this.stage = stage;
         this.noteManager = new NoteManager();
     }
@@ -26,14 +24,29 @@ public class MainWindow {
         NoteList noteList = new NoteList();
         NoteEditor noteEditor = new NoteEditor();
 
+        // Load existing notes
         noteList.setNotes(
             noteManager.getNotes()
         );
 
+        // Open a note when it is selected
         noteList.setOnNoteSelected(
             noteEditor::showNote
         );
 
+        // Create a new note
+        sidebar.getNewNoteButton().setOnAction(event -> {
+
+            var newNote = noteManager.createNote();
+
+            noteList.setNotes(
+                noteManager.getNotes()
+            );
+
+            noteEditor.showNote(newNote);
+        });
+
+        // Main content area
         HBox content = new HBox(
             noteList,
             noteEditor
@@ -42,12 +55,14 @@ public class MainWindow {
         root.setLeft(sidebar);
         root.setCenter(content);
 
+        // Scene
         Scene scene = new Scene(
             root,
             1400,
             850
         );
 
+        // Load CSS
         scene.getStylesheets().add(
             getClass()
                 .getResource(
@@ -61,3 +76,5 @@ public class MainWindow {
         stage.show();
     }
 }
+
+

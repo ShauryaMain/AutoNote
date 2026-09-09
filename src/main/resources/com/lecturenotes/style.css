@@ -118,3 +118,26 @@
 .scroll-bar:horizontal {
     -fx-background-color: transparent;
 }
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+.new-note-button {
+    -fx-background-color: #17171a;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 14px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-margin: 8px 0 12px 0;
+}
+
+.new-note-button:hover {
+    -fx-background-color: #303036;
+}
+
+.new-note-button:pressed {
+    -fx-background-color: #44444a;
+}
