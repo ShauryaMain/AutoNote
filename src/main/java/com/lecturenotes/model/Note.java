@@ -10,6 +10,7 @@ public class Note {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private String folderId;
 
     public Note() {
         // Required for JSON deserialization
@@ -70,4 +71,13 @@ public class Note {
     private void touch() {
         modifiedAt = LocalDateTime.now();
     }
+
+    public String getFolderId() {
+      return folderId;
+    }
+
+    public void setFolderId() {
+      this.folderId = folderId;
+    }
 }
+
