@@ -5,15 +5,18 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import com.lecturenotes.services.FolderManager;
 
 public class MainWindow {
 
     private final Stage stage;
     private final NoteManager noteManager;
+    private final FolderManager folderManager;
 
     public MainWindow(Stage stage) {
         this.stage = stage;
         this.noteManager = new NoteManager();
+        this.folderManager = new FolderManager();
     }
 
     public void show() {
@@ -23,6 +26,11 @@ public class MainWindow {
         Sidebar sidebar = new Sidebar();
         NoteList noteList = new NoteList();
         NoteEditor noteEditor = new NoteEditor();
+        folderManager.createFolder("Physics", null);
+        folderManager.createFolder("Math", null);
+        folderManager.createFolder("CS", null);
+
+        sidebar.setFolders(folderManager.getFolders());
 
         // Load existing notes
         noteList.setNotes(
