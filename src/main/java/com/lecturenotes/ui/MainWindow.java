@@ -34,6 +34,8 @@ public class MainWindow {
             noteEditor::showNote
         );
 
+        noteEditor.setOnNoteChanged(note -> noteManager.save());
+
         // Create a new note
         sidebar.getNewNoteButton().setOnAction(event -> {
 

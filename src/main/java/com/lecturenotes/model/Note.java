@@ -5,11 +5,15 @@ import java.util.UUID;
 
 public class Note {
 
-    private final String id;
+    private String id;
     private String title;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    public Note() {
+        // Required for JSON deserialization
+    }
 
     public Note(String title, String content) {
 
@@ -23,6 +27,10 @@ public class Note {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -47,8 +55,16 @@ public class Note {
         return createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getModifiedAt() {
         return modifiedAt;
+    }
+
+    public void setModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = modifiedAt;
     }
 
     private void touch() {

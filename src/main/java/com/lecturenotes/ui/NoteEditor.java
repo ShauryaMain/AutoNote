@@ -6,12 +6,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 
+import java.util.function.Consumer;
+
 public class NoteEditor extends BorderPane {
 
     private final Label title;
     private final TextArea editor;
 
     private Note currentNote;
+
+    private Consumer<Note> onNoteChanged;
 
     public NoteEditor() {
 
@@ -25,6 +29,7 @@ public class NoteEditor extends BorderPane {
         title.getStyleClass().add("editor-title");
 
         editor = new TextArea();
+
         editor.getStyleClass().add("editor-text");
 
         editor.setWrapText(true);
@@ -35,6 +40,22 @@ public class NoteEditor extends BorderPane {
 
         setTop(title);
         setCenter(editor);
+
+        editor.textProperty().addListener(
+            (observable, oldValue, newValue) -> {
+
+                if (currentNote != null) {
+
+                    currentNote.setContent(
+                        newValue
+                    );
+
+                    if (onNoteChanged != null) {
+                        onNoteChanged.accept(currentNote);
+                    }
+                }
+            }
+        );
     }
 
     public void showNote(Note note) {
@@ -42,7 +63,10 @@ public class NoteEditor extends BorderPane {
         currentNote = note;
 
         title.setText(note.getTitle());
-        editor.setText(note.getContent());
+
+        editor.setText(
+            note.getContent()
+        );
     }
 
     public void saveCurrentNote() {
@@ -51,7 +75,22 @@ public class NoteEditor extends BorderPane {
             return;
         }
 
-        currentNote.setTitle(title.getText());
-        currentNote.setContent(editor.getText());
+        currentNote.setTitle(
+            title.getText()
+        );
+
+        currentNote.setContent(
+            editor.getText()
+        );
+
+        if (onNoteChanged != null) {
+            onNoteChanged.accept(currentNote);
+        }
+    }
+
+    public void setOnNoteChanged(
+        Consumer<Note> callback
+    ) {
+        this.onNoteChanged = callback;
     }
 }
