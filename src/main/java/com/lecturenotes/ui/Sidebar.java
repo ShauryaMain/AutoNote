@@ -7,19 +7,19 @@ import javafx.scene.layout.VBox;
 public class Sidebar extends VBox {
 
     public Sidebar() {
+
+        getStyleClass().add("sidebar");
+
         setPrefWidth(240);
         setPadding(new Insets(28, 20, 28, 20));
-        setSpacing(18);
+        setSpacing(8);
 
         Label title = new Label("AutoNote");
-        title.setStyle("""
-            -fx-font-size: 22px;
-            -fx-font-weight: bold;
-        """);
+        title.getStyleClass().add("sidebar-title");
 
-        Label notes = new Label("Notes");
-        Label recent = new Label("Recent");
-        Label folders = new Label("Folders");
+        Label notes = createItem("Notes");
+        Label recent = createItem("Recent");
+        Label folders = createItem("Folders");
 
         getChildren().addAll(
             title,
@@ -27,5 +27,13 @@ public class Sidebar extends VBox {
             recent,
             folders
         );
+    }
+
+    private Label createItem(String text) {
+
+        Label item = new Label(text);
+        item.getStyleClass().add("sidebar-item");
+
+        return item;
     }
 }

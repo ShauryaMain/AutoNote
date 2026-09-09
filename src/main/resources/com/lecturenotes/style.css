@@ -1,0 +1,120 @@
+/* ============================================================
+   AutoNote — Global Styles
+   ============================================================ */
+
+.root {
+    -fx-font-family: "Inter", "SF Pro Display", "Helvetica Neue", sans-serif;
+    -fx-background-color: #f7f7f8;
+}
+
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+
+.sidebar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e7e7e9;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.sidebar-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #17171a;
+}
+
+.sidebar-item {
+    -fx-font-size: 14px;
+    -fx-text-fill: #6b6b73;
+    -fx-padding: 9px 12px;
+    -fx-background-radius: 8px;
+}
+
+.sidebar-item:hover {
+    -fx-background-color: #f0f0f2;
+    -fx-text-fill: #17171a;
+}
+
+
+/* ============================================================
+   Note List
+   ============================================================ */
+
+.note-list {
+    -fx-background-color: #f7f7f8;
+    -fx-border-color: #e7e7e9;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.note-list .viewport {
+    -fx-background-color: #f7f7f8;
+}
+
+.note-list-heading {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #17171a;
+}
+
+.note-item {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+    -fx-padding: 14px;
+    -fx-border-color: #e7e7e9;
+    -fx-border-radius: 10px;
+}
+
+.note-item:hover {
+    -fx-background-color: #fafafa;
+    -fx-border-color: #d4d4d8;
+}
+
+
+/* ============================================================
+   Editor
+   ============================================================ */
+
+.editor {
+    -fx-background-color: #ffffff;
+}
+
+.editor-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #17171a;
+}
+
+.editor-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #3f3f46;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.editor-text .content {
+    -fx-background-color: transparent;
+}
+
+
+/* ============================================================
+   Scrollbars
+   ============================================================ */
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c7c7cc;
+    -fx-background-radius: 10px;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
