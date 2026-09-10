@@ -5,6 +5,9 @@ import com.lecturenotes.model.Note;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -130,12 +133,58 @@ public class NoteList extends ScrollPane {
             preview
         );
 
+        // --------------------------------
+        // Normal click
+        // --------------------------------
+
         noteBox.setOnMouseClicked(event -> {
 
             if (noteSelected != null) {
 
                 noteSelected.accept(note);
             }
+        });
+
+        // --------------------------------
+        // Start drag
+        // --------------------------------
+
+        noteBox.setOnDragDetected(event -> {
+
+            Dragboard dragboard =
+                noteBox.startDragAndDrop(
+                    TransferMode.MOVE
+                );
+
+            ClipboardContent content =
+                new ClipboardContent();
+
+            content.putString(
+                note.getId()
+            );
+
+            dragboard.setContent(content);
+
+            event.consume();
+        });
+
+        // --------------------------------
+        // Drag over
+        // --------------------------------
+
+        noteBox.setOnDragOver(event -> {
+
+            if (
+                event.getGestureSource() != noteBox &&
+                event.getDragboard().hasString()
+            ) {
+
+                event.acceptTransferModes(
+                    TransferMode.MOVE
+                );
+            }
+
+            event.consume();
         });
 
         container.getChildren().add(
@@ -147,8 +196,10 @@ public class NoteList extends ScrollPane {
         String content
     ) {
 
-        if (content == null ||
-            content.isBlank()) {
+        if (
+            content == null ||
+            content.isBlank()
+        ) {
 
             return "No content";
         }
@@ -175,3 +226,5 @@ public class NoteList extends ScrollPane {
         this.noteSelected = callback;
     }
 }
+
+

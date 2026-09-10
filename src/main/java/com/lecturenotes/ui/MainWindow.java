@@ -29,17 +29,26 @@ public class MainWindow {
 
         this.stage = stage;
 
-        this.noteManager = new NoteManager();
-        this.folderManager = new FolderManager();
+        this.noteManager =
+            new NoteManager();
+
+        this.folderManager =
+            new FolderManager();
     }
 
     public void show() {
 
-        BorderPane root = new BorderPane();
+        BorderPane root =
+            new BorderPane();
 
-        sidebar = new Sidebar();
-        noteList = new NoteList();
-        noteEditor = new NoteEditor();
+        sidebar =
+            new Sidebar();
+
+        noteList =
+            new NoteList();
+
+        noteEditor =
+            new NoteEditor();
 
         // --------------------------------
         // Initial notes
@@ -48,7 +57,7 @@ public class MainWindow {
         refreshNoteList();
 
         // --------------------------------
-        // Select a note
+        // Select note
         // --------------------------------
 
         noteList.setOnNoteSelected(
@@ -72,7 +81,7 @@ public class MainWindow {
         );
 
         // --------------------------------
-        // Select a folder
+        // Select folder
         // --------------------------------
 
         sidebar.setOnFolderSelected(
@@ -98,10 +107,36 @@ public class MainWindow {
         );
 
         // --------------------------------
+        // DRAG NOTE INTO FOLDER
+        // --------------------------------
+
+        sidebar.setOnNoteDropped(
+            droppedNote -> {
+
+                Note realNote =
+                    findNoteById(
+                        droppedNote.getId()
+                    );
+
+                if (realNote == null) {
+                    return;
+                }
+
+                noteManager.moveNote(
+                    realNote,
+                    droppedNote.getFolderId()
+                );
+
+                refreshNoteList();
+            }
+        );
+
+        // --------------------------------
         // New Note
         // --------------------------------
 
-        sidebar.getNewNoteButton()
+        sidebar
+            .getNewNoteButton()
             .setOnAction(event -> {
 
                 String folderId =
@@ -125,7 +160,8 @@ public class MainWindow {
         // New Folder
         // --------------------------------
 
-        sidebar.getNewFolderButton()
+        sidebar
+            .getNewFolderButton()
             .setOnAction(event -> {
 
                 Optional<String> result =
@@ -160,23 +196,26 @@ public class MainWindow {
         // Layout
         // --------------------------------
 
-        HBox content = new HBox(
-            noteList,
-            noteEditor
-        );
+        HBox content =
+            new HBox(
+                noteList,
+                noteEditor
+            );
 
         root.setLeft(sidebar);
+
         root.setCenter(content);
 
         // --------------------------------
         // Scene
         // --------------------------------
 
-        Scene scene = new Scene(
-            root,
-            1400,
-            850
-        );
+        Scene scene =
+            new Scene(
+                root,
+                1400,
+                850
+            );
 
         scene.getStylesheets().add(
             getClass()
@@ -187,8 +226,33 @@ public class MainWindow {
         );
 
         stage.setTitle("AutoNote");
+
         stage.setScene(scene);
+
         stage.show();
+    }
+
+    // --------------------------------
+    // Find note
+    // --------------------------------
+
+    private Note findNoteById(
+        String id
+    ) {
+
+        for (Note note :
+            noteManager.getNotes()
+        ) {
+
+            if (
+                note.getId().equals(id)
+            ) {
+
+                return note;
+            }
+        }
+
+        return null;
     }
 
     // --------------------------------

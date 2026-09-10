@@ -1,11 +1,14 @@
 package com.lecturenotes.ui;
 
 import com.lecturenotes.model.Folder;
+import com.lecturenotes.model.Note;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -17,8 +20,10 @@ public class Sidebar extends VBox {
     private final Button newNoteButton;
     private final Button newFolderButton;
     private final VBox folderContainer;
+    private final Button notesButton;
 
     private Consumer<Folder> folderSelected;
+    private Consumer<Note> noteDropped;
     private Runnable notesSelected;
 
     private Folder selectedFolder;
@@ -28,13 +33,35 @@ public class Sidebar extends VBox {
         getStyleClass().add("sidebar");
 
         setPrefWidth(250);
-        setPadding(new Insets(28, 20, 28, 20));
+
+        setPadding(
+            new Insets(
+                28,
+                20,
+                28,
+                20
+            )
+        );
+
         setSpacing(8);
 
-        Label title = new Label("AutoNote");
-        title.getStyleClass().add("sidebar-title");
+        // --------------------------------
+        // Title
+        // --------------------------------
 
-        newNoteButton = new Button("+  New Note");
+        Label title =
+            new Label("AutoNote");
+
+        title.getStyleClass().add(
+            "sidebar-title"
+        );
+
+        // --------------------------------
+        // New Note
+        // --------------------------------
+
+        newNoteButton =
+            new Button("+  New Note");
 
         newNoteButton.getStyleClass().add(
             "new-note-button"
@@ -44,23 +71,88 @@ public class Sidebar extends VBox {
             Double.MAX_VALUE
         );
 
-        // Notes button
+        // --------------------------------
+        // Notes
+        // --------------------------------
 
-        Button notes = new Button("Notes");
+        notesButton =
+            new Button("Notes");
 
-        notes.getStyleClass().add(
+        notesButton.getStyleClass().add(
             "sidebar-item"
         );
 
-        notes.setMaxWidth(
+        notesButton.setMaxWidth(
             Double.MAX_VALUE
         );
 
-        notes.setAlignment(
+        notesButton.setAlignment(
             Pos.CENTER_LEFT
         );
 
-        notes.setOnAction(event -> {
+        // Notes is a drop target
+
+        notesButton.setOnDragOver(event -> {
+
+            if (
+                event.getGestureSource() != notesButton &&
+                event.getDragboard().hasString()
+            ) {
+
+                event.acceptTransferModes(
+                    TransferMode.MOVE
+                );
+            }
+
+            event.consume();
+        });
+
+        notesButton.setOnDragEntered(event -> {
+
+            if (event.getDragboard().hasString()) {
+
+                notesButton.setStyle(
+                    "-fx-background-color: #dedee3;"
+                );
+            }
+        });
+
+        notesButton.setOnDragExited(event -> {
+
+            notesButton.setStyle("");
+        });
+
+        notesButton.setOnDragDropped(event -> {
+
+            Dragboard dragboard =
+                event.getDragboard();
+
+            boolean success = false;
+
+            if (dragboard.hasString()) {
+
+                String noteId =
+                    dragboard.getString();
+
+                if (noteDropped != null) {
+
+                    Note dummy =
+                        new Note();
+
+                    dummy.setId(noteId);
+
+                    noteDropped.accept(dummy);
+
+                    success = true;
+                }
+            }
+
+            event.setDropCompleted(success);
+
+            event.consume();
+        });
+
+        notesButton.setOnAction(event -> {
 
             selectedFolder = null;
 
@@ -69,11 +161,16 @@ public class Sidebar extends VBox {
             }
         });
 
+        // --------------------------------
         // Recent
+        // --------------------------------
 
-        Label recent = createItem("Recent");
+        Label recent =
+            createItem("Recent");
 
+        // --------------------------------
         // Folders
+        // --------------------------------
 
         Label foldersTitle =
             new Label("Folders");
@@ -82,9 +179,8 @@ public class Sidebar extends VBox {
             "sidebar-item"
         );
 
-        newFolderButton = new Button(
-            "+  New Folder"
-        );
+        newFolderButton =
+            new Button("+  New Folder");
 
         newFolderButton.getStyleClass().add(
             "new-folder-button"
@@ -94,12 +190,17 @@ public class Sidebar extends VBox {
             Double.MAX_VALUE
         );
 
-        folderContainer = new VBox(3);
+        folderContainer =
+            new VBox(3);
+
+        // --------------------------------
+        // Layout
+        // --------------------------------
 
         getChildren().addAll(
             title,
             newNoteButton,
-            notes,
+            notesButton,
             recent,
             foldersTitle,
             newFolderButton,
@@ -107,9 +208,12 @@ public class Sidebar extends VBox {
         );
     }
 
-    private Label createItem(String text) {
+    private Label createItem(
+        String text
+    ) {
 
-        Label item = new Label(text);
+        Label item =
+            new Label(text);
 
         item.getStyleClass().add(
             "sidebar-item"
@@ -121,6 +225,10 @@ public class Sidebar extends VBox {
 
         return item;
     }
+
+    // --------------------------------
+    // Build folder tree
+    // --------------------------------
 
     public void setFolders(
         List<Folder> folders
@@ -151,9 +259,11 @@ public class Sidebar extends VBox {
                     continue;
                 }
 
-            } else if (!parentId.equals(
-                folder.getParentId()
-            )) {
+            } else if (
+                !parentId.equals(
+                    folder.getParentId()
+                )
+            ) {
 
                 continue;
             }
@@ -189,22 +299,125 @@ public class Sidebar extends VBox {
                 );
 
             folderButton.setText(
-                (hasChildren ? "▸  " : "•  ")
-                    + folder.getName()
+                (hasChildren
+                    ? "▸  "
+                    : "•  ")
+                + folder.getName()
             );
+
+            // --------------------------------
+            // Normal folder selection
+            // --------------------------------
 
             folderButton.setOnAction(event -> {
 
                 selectedFolder = folder;
 
                 if (folderSelected != null) {
-                    folderSelected.accept(folder);
+
+                    folderSelected.accept(
+                        folder
+                    );
                 }
             });
 
-            folderContainer.getChildren().add(
-                folderButton
-            );
+            // --------------------------------
+            // Drag over folder
+            // --------------------------------
+
+            folderButton.setOnDragOver(event -> {
+
+                if (
+                    event.getGestureSource()
+                        != folderButton &&
+                    event.getDragboard()
+                        .hasString()
+                ) {
+
+                    event.acceptTransferModes(
+                        TransferMode.MOVE
+                    );
+                }
+
+                event.consume();
+            });
+
+            // --------------------------------
+            // Drag entered
+            // --------------------------------
+
+            folderButton.setOnDragEntered(event -> {
+
+                if (
+                    event.getDragboard()
+                        .hasString()
+                ) {
+
+                    folderButton.setStyle(
+                        "-fx-background-color: #dedee3;" +
+                        "-fx-text-fill: #18181b;"
+                    );
+                }
+            });
+
+            // --------------------------------
+            // Drag exited
+            // --------------------------------
+
+            folderButton.setOnDragExited(event -> {
+
+                folderButton.setStyle("");
+            });
+
+            // --------------------------------
+            // Drop
+            // --------------------------------
+
+            folderButton.setOnDragDropped(event -> {
+
+                Dragboard dragboard =
+                    event.getDragboard();
+
+                boolean success = false;
+
+                if (dragboard.hasString()) {
+
+                    String noteId =
+                        dragboard.getString();
+
+                    if (noteDropped != null) {
+
+                        Note dummy =
+                            new Note();
+
+                        dummy.setId(noteId);
+
+                        dummy.setFolderId(
+                            folder.getId()
+                        );
+
+                        noteDropped.accept(
+                            dummy
+                        );
+
+                        success = true;
+                    }
+                }
+
+                event.setDropCompleted(
+                    success
+                );
+
+                event.consume();
+            });
+
+            folderContainer
+                .getChildren()
+                .add(folderButton);
+
+            // --------------------------------
+            // Children
+            // --------------------------------
 
             if (hasChildren) {
 
@@ -224,9 +437,11 @@ public class Sidebar extends VBox {
 
         for (Folder folder : folders) {
 
-            if (parentId.equals(
-                folder.getParentId()
-            )) {
+            if (
+                parentId.equals(
+                    folder.getParentId()
+                )
+            ) {
 
                 return true;
             }
@@ -234,6 +449,10 @@ public class Sidebar extends VBox {
 
         return false;
     }
+
+    // --------------------------------
+    // Getters
+    // --------------------------------
 
     public Button getNewNoteButton() {
         return newNoteButton;
@@ -247,11 +466,22 @@ public class Sidebar extends VBox {
         return selectedFolder;
     }
 
+    // --------------------------------
+    // Callbacks
+    // --------------------------------
+
     public void setOnFolderSelected(
         Consumer<Folder> callback
     ) {
 
         this.folderSelected = callback;
+    }
+
+    public void setOnNoteDropped(
+        Consumer<Note> callback
+    ) {
+
+        this.noteDropped = callback;
     }
 
     public void setOnNotesSelected(
@@ -260,6 +490,10 @@ public class Sidebar extends VBox {
 
         this.notesSelected = callback;
     }
+
+    // --------------------------------
+    // Folder dialog
+    // --------------------------------
 
     public Optional<String> requestFolderName() {
 
