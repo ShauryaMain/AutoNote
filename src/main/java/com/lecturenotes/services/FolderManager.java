@@ -1,26 +1,71 @@
 package com.lecturenotes.services;
 
-import com.lecturenotes.model.Folder;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.lecturenotes.model.Folder;
+import com.lecturenotes.storage.FolderStorage;
 
 public class FolderManager {
 
     private final List<Folder> folders;
+    private final FolderStorage storage;
 
     public FolderManager() {
 
-        folders = new ArrayList<>();
+        storage = new FolderStorage();
 
-        createFolder("Physics", null);
-        createFolder("Mathematics", null);
-        createFolder("Computer Science", null);
+        List<Folder> loadedFolders =
+            storage.load();
+
+        if (loadedFolders == null) {
+
+            folders = new ArrayList<>();
+
+            createDefaultFolders();
+
+            save();
+
+        } else {
+
+            folders = loadedFolders;
+        }
     }
+
+    // --------------------------------
+    // Default folders
+    // --------------------------------
+
+    private void createDefaultFolders() {
+
+        createFolder(
+            "Physics",
+            null
+        );
+
+        createFolder(
+            "Mathematics",
+            null
+        );
+
+        createFolder(
+            "Computer Science",
+            null
+        );
+    }
+
+    // --------------------------------
+    // Get all folders
+    // --------------------------------
 
     public List<Folder> getFolders() {
+
         return folders;
     }
+
+    // --------------------------------
+    // Create folder
+    // --------------------------------
 
     public Folder createFolder(
         String name,
@@ -35,8 +80,14 @@ public class FolderManager {
 
         folders.add(folder);
 
+        save();
+
         return folder;
     }
+
+    // --------------------------------
+    // Get children
+    // --------------------------------
 
     public List<Folder> getChildren(
         String parentId
@@ -106,6 +157,8 @@ public class FolderManager {
             newParentId
         );
 
+        save();
+
         return true;
     }
 
@@ -158,6 +211,10 @@ public class FolderManager {
         return false;
     }
 
+    // --------------------------------
+    // Find folder
+    // --------------------------------
+
     private Folder findFolder(
         String id
     ) {
@@ -175,13 +232,23 @@ public class FolderManager {
         return null;
     }
 
+    // --------------------------------
+    // Delete folder
+    // --------------------------------
+
     public void deleteFolder(
         Folder folder
     ) {
 
+        if (folder == null) {
+            return;
+        }
+
         List<Folder> children =
-            getChildren(
-                folder.getId()
+            new ArrayList<>(
+                getChildren(
+                    folder.getId()
+                )
             );
 
         for (Folder child : children) {
@@ -190,13 +257,46 @@ public class FolderManager {
         }
 
         folders.remove(folder);
+
+        save();
     }
+
+    // --------------------------------
+    // Rename folder
+    // --------------------------------
 
     public void renameFolder(
         Folder folder,
         String newName
     ) {
 
-        folder.setName(newName);
+        if (folder == null) {
+            return;
+        }
+
+        if (
+            newName == null ||
+            newName.isBlank()
+        ) {
+
+            return;
+        }
+
+        folder.setName(
+            newName
+        );
+
+        save();
+    }
+
+    // --------------------------------
+    // Save folders
+    // --------------------------------
+
+    public void save() {
+
+        storage.save(
+            folders
+        );
     }
 }
