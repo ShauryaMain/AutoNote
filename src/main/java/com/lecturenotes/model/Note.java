@@ -39,6 +39,7 @@ public class Note {
     }
 
     public void setTitle(String title) {
+
         this.title = title;
         touch();
     }
@@ -48,6 +49,7 @@ public class Note {
     }
 
     public void setContent(String content) {
+
         this.content = content;
         touch();
     }
@@ -56,7 +58,10 @@ public class Note {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(
+        LocalDateTime createdAt
+    ) {
+
         this.createdAt = createdAt;
     }
 
@@ -64,20 +69,29 @@ public class Note {
         return modifiedAt;
     }
 
-    public void setModifiedAt(LocalDateTime modifiedAt) {
+    public void setModifiedAt(
+        LocalDateTime modifiedAt
+    ) {
+
         this.modifiedAt = modifiedAt;
     }
 
+    public String getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(
+        String folderId
+    ) {
+
+        this.folderId = folderId;
+        touch();
+    }
+
     private void touch() {
+
         modifiedAt = LocalDateTime.now();
     }
-
-    public String getFolderId() {
-      return folderId;
-    }
-
-    public void setFolderId() {
-      this.folderId = folderId;
-    }
 }
+
 

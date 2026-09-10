@@ -1,6 +1,7 @@
 package com.lecturenotes.ui;
 
 import com.lecturenotes.model.Note;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -12,63 +13,165 @@ import java.util.function.Consumer;
 public class NoteList extends ScrollPane {
 
     private final VBox container;
+
     private Consumer<Note> noteSelected;
 
     public NoteList() {
 
         getStyleClass().add("note-list");
 
-        setPrefWidth(300);
-        setFitToWidth(true);
-        setHbarPolicy(ScrollBarPolicy.NEVER);
+        setPrefWidth(320);
 
-        container = new VBox(10);
-        container.setPadding(
-            new Insets(24, 16, 24, 16)
+        setFitToWidth(true);
+
+        setHbarPolicy(
+            ScrollBarPolicy.NEVER
         );
 
-        Label heading = new Label("Recent Notes");
-        heading.getStyleClass().add("note-list-heading");
+        setVbarPolicy(
+            ScrollBarPolicy.AS_NEEDED
+        );
 
-        container.getChildren().add(heading);
+        container = new VBox(2);
+
+        container.setPadding(
+            new Insets(
+                28,
+                18,
+                28,
+                18
+            )
+        );
 
         setContent(container);
+
+        setNotes(
+            List.of(),
+            "Notes"
+        );
     }
 
-    public void setNotes(List<Note> notes) {
+    public void setNotes(
+        List<Note> notes
+    ) {
+
+        setNotes(
+            notes,
+            "Notes"
+        );
+    }
+
+    public void setNotes(
+        List<Note> notes,
+        String headingText
+    ) {
 
         container.getChildren().clear();
 
-        Label heading = new Label("Recent Notes");
-        heading.getStyleClass().add("note-list-heading");
+        Label heading =
+            new Label(headingText);
 
-        container.getChildren().add(heading);
+        heading.getStyleClass().add(
+            "note-list-heading"
+        );
+
+        container.getChildren().add(
+            heading
+        );
 
         for (Note note : notes) {
+
             addNote(note);
         }
     }
 
     private void addNote(Note note) {
 
-        Label item = new Label(note.getTitle());
+        VBox noteBox =
+            new VBox(3);
 
-        item.getStyleClass().add("note-item");
+        noteBox.getStyleClass().add(
+            "note-item"
+        );
 
-        item.setMaxWidth(Double.MAX_VALUE);
-        item.setWrapText(true);
+        noteBox.setMaxWidth(
+            Double.MAX_VALUE
+        );
 
-        item.setOnMouseClicked(event -> {
+        Label title =
+            new Label(note.getTitle());
+
+        title.setWrapText(true);
+
+        title.setMaxWidth(
+            Double.MAX_VALUE
+        );
+
+        Label preview =
+            new Label(
+                createPreview(
+                    note.getContent()
+                )
+            );
+
+        preview.setWrapText(true);
+
+        preview.setMaxWidth(
+            Double.MAX_VALUE
+        );
+
+        preview.setStyle(
+            "-fx-font-size: 12px;" +
+            "-fx-text-fill: #85858c;"
+        );
+
+        noteBox.getChildren().addAll(
+            title,
+            preview
+        );
+
+        noteBox.setOnMouseClicked(event -> {
 
             if (noteSelected != null) {
+
                 noteSelected.accept(note);
             }
         });
 
-        container.getChildren().add(item);
+        container.getChildren().add(
+            noteBox
+        );
     }
 
-    public void setOnNoteSelected(Consumer<Note> callback) {
+    private String createPreview(
+        String content
+    ) {
+
+        if (content == null ||
+            content.isBlank()) {
+
+            return "No content";
+        }
+
+        String cleaned =
+            content
+                .replace("\n", " ")
+                .replace("\r", " ")
+                .trim();
+
+        if (cleaned.length() > 80) {
+
+            return cleaned.substring(0, 80)
+                + "…";
+        }
+
+        return cleaned;
+    }
+
+    public void setOnNoteSelected(
+        Consumer<Note> callback
+    ) {
+
         this.noteSelected = callback;
     }
 }

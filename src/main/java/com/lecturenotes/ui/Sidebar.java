@@ -19,6 +19,7 @@ public class Sidebar extends VBox {
     private final VBox folderContainer;
 
     private Consumer<Folder> folderSelected;
+    private Runnable notesSelected;
 
     private Folder selectedFolder;
 
@@ -43,10 +44,39 @@ public class Sidebar extends VBox {
             Double.MAX_VALUE
         );
 
-        Label notes = createItem("Notes");
+        // Notes button
+
+        Button notes = new Button("Notes");
+
+        notes.getStyleClass().add(
+            "sidebar-item"
+        );
+
+        notes.setMaxWidth(
+            Double.MAX_VALUE
+        );
+
+        notes.setAlignment(
+            Pos.CENTER_LEFT
+        );
+
+        notes.setOnAction(event -> {
+
+            selectedFolder = null;
+
+            if (notesSelected != null) {
+                notesSelected.run();
+            }
+        });
+
+        // Recent
+
         Label recent = createItem("Recent");
 
-        Label foldersTitle = new Label("Folders");
+        // Folders
+
+        Label foldersTitle =
+            new Label("Folders");
 
         foldersTitle.getStyleClass().add(
             "sidebar-item"
@@ -128,7 +158,8 @@ public class Sidebar extends VBox {
                 continue;
             }
 
-            Button folderButton = new Button();
+            Button folderButton =
+                new Button();
 
             folderButton.getStyleClass().add(
                 "folder-item"
@@ -221,6 +252,13 @@ public class Sidebar extends VBox {
     ) {
 
         this.folderSelected = callback;
+    }
+
+    public void setOnNotesSelected(
+        Runnable callback
+    ) {
+
+        this.notesSelected = callback;
     }
 
     public Optional<String> requestFolderName() {

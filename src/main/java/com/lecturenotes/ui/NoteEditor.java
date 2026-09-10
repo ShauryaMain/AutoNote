@@ -1,6 +1,7 @@
 package com.lecturenotes.ui;
 
 import com.lecturenotes.model.Note;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -22,15 +23,29 @@ public class NoteEditor extends BorderPane {
         getStyleClass().add("editor");
 
         setPadding(
-            new Insets(40, 50, 40, 50)
+            new Insets(
+                50,
+                80,
+                50,
+                80
+            )
         );
 
-        title = new Label("Welcome to AutoNote");
-        title.getStyleClass().add("editor-title");
+        title =
+            new Label(
+                "Welcome to AutoNote"
+            );
 
-        editor = new TextArea();
+        title.getStyleClass().add(
+            "editor-title"
+        );
 
-        editor.getStyleClass().add("editor-text");
+        editor =
+            new TextArea();
+
+        editor.getStyleClass().add(
+            "editor-text"
+        );
 
         editor.setWrapText(true);
 
@@ -38,7 +53,10 @@ public class NoteEditor extends BorderPane {
             "Start writing your note..."
         );
 
+        editor.setPrefRowCount(30);
+
         setTop(title);
+
         setCenter(editor);
 
         editor.textProperty().addListener(
@@ -51,7 +69,10 @@ public class NoteEditor extends BorderPane {
                     );
 
                     if (onNoteChanged != null) {
-                        onNoteChanged.accept(currentNote);
+
+                        onNoteChanged.accept(
+                            currentNote
+                        );
                     }
                 }
             }
@@ -62,7 +83,9 @@ public class NoteEditor extends BorderPane {
 
         currentNote = note;
 
-        title.setText(note.getTitle());
+        title.setText(
+            note.getTitle()
+        );
 
         editor.setText(
             note.getContent()
@@ -84,13 +107,17 @@ public class NoteEditor extends BorderPane {
         );
 
         if (onNoteChanged != null) {
-            onNoteChanged.accept(currentNote);
+
+            onNoteChanged.accept(
+                currentNote
+            );
         }
     }
 
     public void setOnNoteChanged(
         Consumer<Note> callback
     ) {
+
         this.onNoteChanged = callback;
     }
 }

@@ -1,78 +1,183 @@
 /* ============================================================
-   AutoNote — Global Styles
+   AUTONOTE — GLOBAL
    ============================================================ */
 
 .root {
-    -fx-font-family: "Inter", "SF Pro Display", "Helvetica Neue", sans-serif;
-    -fx-background-color: #f7f7f8;
+    -fx-font-family: "SF Pro Display", "Helvetica Neue", "Inter", sans-serif;
+    -fx-background-color: #f5f5f7;
 }
 
 
 /* ============================================================
-   Sidebar
+   SIDEBAR
    ============================================================ */
 
 .sidebar {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e7e7e9;
+    -fx-background-color: #f7f7f8;
+    -fx-border-color: #dedee3;
     -fx-border-width: 0 1px 0 0;
 }
 
 .sidebar-title {
-    -fx-font-size: 22px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: #17171a;
+    -fx-text-fill: #1d1d1f;
+    -fx-padding: 0 8px 14px 8px;
 }
 
-.sidebar-item {
-    -fx-font-size: 14px;
-    -fx-text-fill: #6b6b73;
+
+/* New Note */
+
+.new-note-button {
+    -fx-background-color: #1d1d1f;
+    -fx-text-fill: white;
+
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+
     -fx-padding: 9px 12px;
+
     -fx-background-radius: 8px;
+
+    -fx-cursor: hand;
+}
+
+.new-note-button:hover {
+    -fx-background-color: #333337;
+}
+
+.new-note-button:pressed {
+    -fx-background-color: #111113;
+}
+
+
+/* Sidebar navigation */
+
+.sidebar-item {
+    -fx-background-color: transparent;
+
+    -fx-font-size: 13px;
+    -fx-text-fill: #68686f;
+
+    -fx-padding: 7px 10px;
+
+    -fx-background-radius: 7px;
+
+    -fx-cursor: hand;
 }
 
 .sidebar-item:hover {
-    -fx-background-color: #f0f0f2;
-    -fx-text-fill: #17171a;
+    -fx-background-color: #e9e9ec;
+    -fx-text-fill: #202024;
+}
+
+
+/* Folders */
+
+.new-folder-button {
+    -fx-background-color: transparent;
+
+    -fx-text-fill: #77777e;
+
+    -fx-font-size: 12px;
+
+    -fx-padding: 6px 10px;
+
+    -fx-background-radius: 7px;
+
+    -fx-cursor: hand;
+
+    -fx-alignment: CENTER_LEFT;
+}
+
+.new-folder-button:hover {
+    -fx-background-color: #e9e9ec;
+    -fx-text-fill: #202024;
+}
+
+.folder-item {
+    -fx-background-color: transparent;
+
+    -fx-text-fill: #626269;
+
+    -fx-font-size: 13px;
+
+    -fx-background-radius: 7px;
+
+    -fx-padding: 6px 8px;
+
+    -fx-cursor: hand;
+
+    -fx-border-color: transparent;
+
+    -fx-alignment: CENTER_LEFT;
+}
+
+.folder-item:hover {
+    -fx-background-color: #e9e9ec;
+    -fx-text-fill: #202024;
+}
+
+.folder-item:focused {
+    -fx-background-color: #e2e2e6;
+    -fx-text-fill: #18181b;
 }
 
 
 /* ============================================================
-   Note List
+   NOTE LIST
    ============================================================ */
 
 .note-list {
-    -fx-background-color: #f7f7f8;
-    -fx-border-color: #e7e7e9;
+    -fx-background-color: #f5f5f7;
+
+    -fx-border-color: #dedee3;
     -fx-border-width: 0 1px 0 0;
 }
 
 .note-list .viewport {
-    -fx-background-color: #f7f7f8;
+    -fx-background-color: #f5f5f7;
 }
 
 .note-list-heading {
-    -fx-font-size: 20px;
+    -fx-font-size: 19px;
     -fx-font-weight: bold;
-    -fx-text-fill: #17171a;
+
+    -fx-text-fill: #1d1d1f;
+
+    -fx-padding: 2px 4px 12px 4px;
 }
 
+
+/* Individual note */
+
 .note-item {
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 10px;
-    -fx-padding: 14px;
-    -fx-border-color: #e7e7e9;
-    -fx-border-radius: 10px;
+    -fx-background-color: transparent;
+
+    -fx-text-fill: #303035;
+
+    -fx-font-size: 14px;
+
+    -fx-padding: 11px 12px;
+
+    -fx-background-radius: 8px;
+
+    -fx-border-color: transparent;
+
+    -fx-cursor: hand;
 }
 
 .note-item:hover {
-    -fx-background-color: #fafafa;
-    -fx-border-color: #d4d4d8;
+    -fx-background-color: #e9e9ec;
+}
+
+.note-item:focused {
+    -fx-background-color: #dfdfe4;
 }
 
 
 /* ============================================================
-   Editor
+   EDITOR
    ============================================================ */
 
 .editor {
@@ -80,16 +185,29 @@
 }
 
 .editor-title {
-    -fx-font-size: 30px;
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
+
     -fx-text-fill: #17171a;
+
+    -fx-padding: 0 0 18px 0;
 }
 
 .editor-text {
+    -fx-font-family: "SF Pro Text", "Helvetica Neue", "Inter", sans-serif;
+
     -fx-font-size: 16px;
-    -fx-text-fill: #3f3f46;
+
+    -fx-text-fill: #37373c;
+
     -fx-background-color: transparent;
+
     -fx-border-color: transparent;
+
+    -fx-padding: 0;
+
+    -fx-highlight-fill: #dfe9ff;
+    -fx-highlight-text-fill: #17171a;
 }
 
 .editor-text .content {
@@ -98,16 +216,18 @@
 
 
 /* ============================================================
-   Scrollbars
+   SCROLLBARS
    ============================================================ */
 
 .scroll-bar:vertical {
     -fx-background-color: transparent;
+
     -fx-pref-width: 8px;
 }
 
 .scroll-bar:vertical .thumb {
     -fx-background-color: #c7c7cc;
+
     -fx-background-radius: 10px;
 }
 
@@ -119,58 +239,12 @@
     -fx-background-color: transparent;
 }
 
-/* ============================================================
-   Buttons
-   ============================================================ */
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #c7c7cc;
 
-.new-note-button {
-    -fx-background-color: #17171a;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-padding: 10px 14px;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-    -fx-margin: 8px 0 12px 0;
+    -fx-background-radius: 10px;
 }
 
-.new-note-button:hover {
-    -fx-background-color: #303036;
-}
-
-.new-note-button:pressed {
-    -fx-background-color: #44444a;
-}
-
-/* ============================================================
-   Folder Controls
-   ============================================================ */
-
-.new-folder-button {
+.scroll-bar:horizontal .track {
     -fx-background-color: transparent;
-    -fx-text-fill: #6b6b73;
-    -fx-font-size: 13px;
-    -fx-padding: 8px 10px;
-    -fx-background-radius: 8px;
-    -fx-cursor: hand;
-    -fx-alignment: CENTER_LEFT;
-}
-
-.new-folder-button:hover {
-    -fx-background-color: #f0f0f2;
-    -fx-text-fill: #17171a;
-}
-
-.folder-item {
-    -fx-background-color: transparent;
-    -fx-text-fill: #55555d;
-    -fx-font-size: 14px;
-    -fx-background-radius: 7px;
-    -fx-alignment: CENTER_LEFT;
-    -fx-cursor: hand;
-}
-
-.folder-item:hover {
-    -fx-background-color: #f0f0f2;
-    -fx-text-fill: #17171a;
 }

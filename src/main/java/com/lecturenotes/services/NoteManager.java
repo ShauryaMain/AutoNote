@@ -79,18 +79,62 @@ public class NoteManager {
         return notes;
     }
 
+    public List<Note> getNotesInFolder(String folderId) {
+
+        List<Note> filteredNotes = new ArrayList<>();
+
+        for (Note note : notes) {
+
+            if (folderId == null) {
+
+                if (note.getFolderId() == null) {
+                    filteredNotes.add(note);
+                }
+
+            } else if (folderId.equals(
+                note.getFolderId()
+            )) {
+
+                filteredNotes.add(note);
+            }
+        }
+
+        return filteredNotes;
+    }
+
     public Note createNote() {
+
+        return createNote(null);
+    }
+
+    public Note createNote(String folderId) {
 
         Note note = new Note(
             "Untitled Note",
             ""
         );
 
+        note.setFolderId(folderId);
+
         notes.add(0, note);
 
         save();
 
         return note;
+    }
+
+    public void moveNote(
+        Note note,
+        String folderId
+    ) {
+
+        if (note == null) {
+            return;
+        }
+
+        note.setFolderId(folderId);
+
+        save();
     }
 
     public void deleteNote(Note note) {
