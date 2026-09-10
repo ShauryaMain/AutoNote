@@ -21,66 +21,59 @@ public class NoteList extends ScrollPane {
 
     public NoteList() {
 
-        getStyleClass().add("note-list");
+        getStyleClass().add(
+                "note-list");
 
-        setPrefWidth(320);
+        setPrefWidth(330);
 
         setFitToWidth(true);
 
         setHbarPolicy(
-            ScrollBarPolicy.NEVER
-        );
+                ScrollBarPolicy.NEVER);
 
         setVbarPolicy(
-            ScrollBarPolicy.AS_NEEDED
-        );
+                ScrollBarPolicy.AS_NEEDED);
 
-        container = new VBox(2);
+        container = new VBox(3);
 
         container.setPadding(
-            new Insets(
-                28,
-                18,
-                28,
-                18
-            )
-        );
+                new Insets(
+                        30,
+                        18,
+                        30,
+                        18));
 
         setContent(container);
 
         setNotes(
-            List.of(),
-            "Notes"
-        );
+                List.of(),
+                "Notes");
     }
 
     public void setNotes(
-        List<Note> notes
-    ) {
+            List<Note> notes) {
 
         setNotes(
-            notes,
-            "Notes"
-        );
+                notes,
+                "Notes");
     }
 
     public void setNotes(
-        List<Note> notes,
-        String headingText
-    ) {
+            List<Note> notes,
+            String headingText) {
 
-        container.getChildren().clear();
+        container
+                .getChildren()
+                .clear();
 
-        Label heading =
-            new Label(headingText);
+        Label heading = new Label(headingText);
 
         heading.getStyleClass().add(
-            "note-list-heading"
-        );
+                "note-list-heading");
 
-        container.getChildren().add(
-            heading
-        );
+        container
+                .getChildren()
+                .add(heading);
 
         for (Note note : notes) {
 
@@ -88,143 +81,133 @@ public class NoteList extends ScrollPane {
         }
     }
 
-    private void addNote(Note note) {
+    private void addNote(
+            Note note) {
 
-        VBox noteBox =
-            new VBox(3);
+        VBox noteBox = new VBox(4);
 
         noteBox.getStyleClass().add(
-            "note-item"
-        );
+                "note-item");
 
         noteBox.setMaxWidth(
-            Double.MAX_VALUE
-        );
+                Double.MAX_VALUE);
 
-        Label title =
-            new Label(note.getTitle());
+        Label title = new Label(
+                note.getTitle());
+
+        title.getStyleClass().add(
+                "note-item-title");
 
         title.setWrapText(true);
 
         title.setMaxWidth(
-            Double.MAX_VALUE
-        );
+                Double.MAX_VALUE);
 
-        Label preview =
-            new Label(
+        Label preview = new Label(
                 createPreview(
-                    note.getContent()
-                )
-            );
+                        note.getContent()));
+
+        preview.getStyleClass().add(
+                "note-item-preview");
 
         preview.setWrapText(true);
 
         preview.setMaxWidth(
-            Double.MAX_VALUE
-        );
+                Double.MAX_VALUE);
 
-        preview.setStyle(
-            "-fx-font-size: 12px;" +
-            "-fx-text-fill: #85858c;"
-        );
+        noteBox
+                .getChildren()
+                .addAll(
+                        title,
+                        preview);
 
-        noteBox.getChildren().addAll(
-            title,
-            preview
-        );
+        // ========================================
+        // CLICK
+        // ========================================
 
-        // --------------------------------
-        // Normal click
-        // --------------------------------
+        noteBox.setOnMouseClicked(
+                event -> {
 
-        noteBox.setOnMouseClicked(event -> {
+                    if (noteSelected != null) {
 
-            if (noteSelected != null) {
+                        noteSelected.accept(
+                                note);
+                    }
+                });
 
-                noteSelected.accept(note);
-            }
-        });
+        // ========================================
+        // DRAG
+        // ========================================
 
-        // --------------------------------
-        // Start drag
-        // --------------------------------
+        noteBox.setOnDragDetected(
+                event -> {
 
-        noteBox.setOnDragDetected(event -> {
+                    Dragboard board = noteBox.startDragAndDrop(
+                            TransferMode.MOVE);
 
-            Dragboard dragboard =
-                noteBox.startDragAndDrop(
-                    TransferMode.MOVE
-                );
+                    ClipboardContent content = new ClipboardContent();
 
-            ClipboardContent content =
-                new ClipboardContent();
+                    content.putString(
+                            "NOTE:"
+                                    + note.getId());
 
-            content.putString(
-                note.getId()
-            );
+                    board.setContent(content);
 
-            dragboard.setContent(content);
+                    event.consume();
+                });
 
-            event.consume();
-        });
-
-        // --------------------------------
-        // Drag over
-        // --------------------------------
+        // ========================================
+        // Dragging over another note
+        // ========================================
 
         noteBox.setOnDragOver(event -> {
 
-            if (
-                event.getGestureSource() != noteBox &&
-                event.getDragboard().hasString()
-            ) {
+            Dragboard board = event.getDragboard();
+
+            if (board.hasString()
+                    &&
+                    board.getString()
+                            .startsWith("NOTE:")) {
 
                 event.acceptTransferModes(
-                    TransferMode.MOVE
-                );
+                        TransferMode.MOVE);
             }
 
             event.consume();
         });
 
-        container.getChildren().add(
-            noteBox
-        );
+        container
+                .getChildren()
+                .add(noteBox);
     }
 
     private String createPreview(
-        String content
-    ) {
+            String content) {
 
-        if (
-            content == null ||
-            content.isBlank()
-        ) {
+        if (content == null ||
+                content.isBlank()) {
 
             return "No content";
         }
 
-        String cleaned =
-            content
+        String cleaned = content
                 .replace("\n", " ")
                 .replace("\r", " ")
                 .trim();
 
-        if (cleaned.length() > 80) {
+        if (cleaned.length() > 90) {
 
-            return cleaned.substring(0, 80)
-                + "…";
+            return cleaned.substring(
+                    0,
+                    90) + "…";
         }
 
         return cleaned;
     }
 
     public void setOnNoteSelected(
-        Consumer<Note> callback
-    ) {
+            Consumer<Note> callback) {
 
-        this.noteSelected = callback;
+        noteSelected = callback;
     }
 }
-
-

@@ -106,9 +106,9 @@ public class MainWindow {
             }
         );
 
-        // --------------------------------
-        // DRAG NOTE INTO FOLDER
-        // --------------------------------
+        // ================================================
+        // NOTE DROP
+        // ================================================
 
         sidebar.setOnNoteDropped(
             droppedNote -> {
@@ -127,6 +127,42 @@ public class MainWindow {
                     droppedNote.getFolderId()
                 );
 
+                refreshNoteList();
+            }
+        );
+
+        // ================================================
+        // FOLDER DROP
+        // ================================================
+
+        sidebar.setOnFolderDropped(
+            (droppedFolder, newParentId) -> {
+
+                Folder realFolder =
+                    findFolderById(
+                        droppedFolder.getId()
+                    );
+
+                if (realFolder == null) {
+                    return;
+                }
+
+                boolean moved =
+                    folderManager.moveFolder(
+                        realFolder,
+                        newParentId
+                    );
+
+                if (!moved) {
+                    return;
+                }
+
+                // Rebuild sidebar
+                sidebar.setFolders(
+                    folderManager.getFolders()
+                );
+
+                // Keep current folder view
                 refreshNoteList();
             }
         );
@@ -232,15 +268,16 @@ public class MainWindow {
         stage.show();
     }
 
-    // --------------------------------
-    // Find note
-    // --------------------------------
+    // ================================================
+    // FIND NOTE
+    // ================================================
 
     private Note findNoteById(
         String id
     ) {
 
-        for (Note note :
+        for (
+            Note note :
             noteManager.getNotes()
         ) {
 
@@ -255,9 +292,33 @@ public class MainWindow {
         return null;
     }
 
-    // --------------------------------
-    // Refresh note list
-    // --------------------------------
+    // ================================================
+    // FIND FOLDER
+    // ================================================
+
+    private Folder findFolderById(
+        String id
+    ) {
+
+        for (
+            Folder folder :
+            folderManager.getFolders()
+        ) {
+
+            if (
+                folder.getId().equals(id)
+            ) {
+
+                return folder;
+            }
+        }
+
+        return null;
+    }
+
+    // ================================================
+    // REFRESH NOTES
+    // ================================================
 
     private void refreshNoteList() {
 
